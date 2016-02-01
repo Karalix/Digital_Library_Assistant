@@ -24,13 +24,33 @@
  *
  */
 
-package fr.univ_lyon1.lida.model;
+package fr.univ_lyon1.dila.model;
 
-import android.app.Fragment;
+import java.util.HashMap;
 
 /**
- * Created by Alix Ducros on 29/01/16.
+ * Created by Alix Ducros on 27/01/16.
  */
-public interface Thing {
-    public Fragment getCard() ;
+public class CollectionManager {
+    private static CollectionManager ourInstance = new CollectionManager();
+
+    protected HashMap<String, Collection> collectionList ;
+    protected String lastCollection ;
+
+    public static CollectionManager getInstance() {
+        return ourInstance;
+    }
+
+    private CollectionManager() {
+        collectionList = new HashMap<>();
+    }
+
+    public void addCollection(String keywords, Collection collection) {
+        collectionList.put(keywords, collection);
+        lastCollection = keywords ;
+    }
+
+    public HashMap<String, Collection> getCollectionList() {
+        return collectionList;
+    }
 }

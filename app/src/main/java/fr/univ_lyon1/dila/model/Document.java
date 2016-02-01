@@ -24,7 +24,7 @@
  *
  */
 
-package fr.univ_lyon1.lida.model;
+package fr.univ_lyon1.dila.model;
 
 /**
  * Created by Alix Ducros on 27/01/16.

@@ -1,4 +1,4 @@
-package fr.univ_lyon1.lida.model;
+package fr.univ_lyon1.dila.model;
 
 import java.util.ArrayList;
 import java.util.List;

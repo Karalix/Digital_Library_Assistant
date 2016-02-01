@@ -24,7 +24,7 @@
  *
  */
 
-package fr.univ_lyon1.lida;
+package fr.univ_lyon1.dila;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -61,9 +61,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univ_lyon1.lida.model.Book;
-import fr.univ_lyon1.lida.model.Collection;
-import fr.univ_lyon1.lida.model.CollectionManager;
+import fr.univ_lyon1.dila.model.Book;
+import fr.univ_lyon1.dila.model.Collection;
+import fr.univ_lyon1.dila.model.CollectionManager;
 
 /**
  * Created by Alix Ducros on 24/01/16.

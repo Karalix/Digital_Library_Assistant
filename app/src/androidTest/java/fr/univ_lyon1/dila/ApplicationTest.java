@@ -1,4 +1,4 @@
-package fr.univ_lyon1.lida;
+package fr.univ_lyon1.dila;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

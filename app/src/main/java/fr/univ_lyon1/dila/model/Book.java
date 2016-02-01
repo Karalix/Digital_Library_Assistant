@@ -24,13 +24,13 @@
  *
  */
 
-package fr.univ_lyon1.lida.model;
+package fr.univ_lyon1.dila.model;
 
 import android.app.Fragment;
 
 import java.util.List;
 
-import fr.univ_lyon1.lida.view.BookCard;
+import fr.univ_lyon1.dila.view.BookCard;
 
 /**
  * Created by Alix Ducros on 27/01/16.
