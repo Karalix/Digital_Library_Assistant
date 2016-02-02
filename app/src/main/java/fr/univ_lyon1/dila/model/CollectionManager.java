@@ -53,4 +53,8 @@ public class CollectionManager {
     public HashMap<String, Collection> getCollectionList() {
         return collectionList;
     }
+
+    public String getLastCollection() {
+        return lastCollection;
+    }
 }

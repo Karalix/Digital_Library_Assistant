@@ -3,4 +3,5 @@
     <string name="around_you">Autour de vous</string>
     <string name="search">Recherche personnalisée</string>
     <string name="network_error">Erreur Réseau</string>
+    <string name="title_activity_collection">CollectionActivity</string>
 </resources>

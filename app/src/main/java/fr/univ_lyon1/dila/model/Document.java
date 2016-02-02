@@ -33,8 +33,9 @@ public abstract  class Document implements Thing{
     protected String title ;
     protected String date ;
     protected String synopsis ;
+    protected String thumbnail ;
 
-    public Document(String title, String date, String synopsis) {
+    public Document(String title, String date, String synopsis, String thumbnail) {
         this.title = title;
         if(title == null) {
             this.title = "" ;
@@ -46,6 +47,10 @@ public abstract  class Document implements Thing{
         this.synopsis = synopsis;
         if(synopsis == null) {
             this.synopsis = "" ;
+        }
+        this.thumbnail = thumbnail ;
+        if(thumbnail == null) {
+            this.thumbnail = "http://cdn-4.freeclipartnow.com/d/10997-1/book-red.jpg" ;
         }
     }
 
@@ -60,4 +65,6 @@ public abstract  class Document implements Thing{
     public String getSynopsis() {
         return synopsis;
     }
+
+    public String getThumbnail() { return thumbnail ;}
 }

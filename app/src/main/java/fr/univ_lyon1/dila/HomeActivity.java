@@ -27,6 +27,7 @@
 package fr.univ_lyon1.dila;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -126,6 +127,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     protected void showRequestResultDialog(String result) {
+
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -136,6 +138,11 @@ public class HomeActivity extends AppCompatActivity {
         // 3. Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    protected  void startCollectionActivity() {
+        Intent intent = new Intent(this, CollectionActivity.class);
+        startActivity(intent);
     }
 
 
@@ -158,38 +165,13 @@ public class HomeActivity extends AppCompatActivity {
                 JSONObject objects = new JSONObject(result) ;
                 JSONArray volumes = (JSONArray)objects.get("items");
 
-                String debugtitles = "";
                 Collection collection = new Collection() ;
 
                 for(int i = 0 ; i< volumes.length() ; i++) {
-                    JSONObject object = volumes.getJSONObject(i).getJSONObject("volumeInfo") ;
-                    List<String> authors = new ArrayList<>();
-                    String title = null ;
-                    String date = null ;
-                    String synopsis = null ;
-                    int nbPages = 0 ;
-                    if(object.has("authors")) {
-                        for (int j = 0; j < object.getJSONArray("authors").length(); j++) {
-                            authors.add(object.getJSONArray("authors").getString(j));
-                        }
-                    }
-                    if(object.has("pageCount")) {
-                        nbPages = object.getInt("pageCount");
-                    }
-                    if (object.has("title")) {
-                        title = object.getString("title");
-                    }
-                    if(object.has("publishedDate")) {
-                        date = object.getString("publishedDate");
-                    }
-                    if(object.has("description")) {
-                        synopsis = object.getString("description");
-                    }
-                    collection.getDocumentList().add(new Book(title, date, synopsis, authors, nbPages));
-                    debugtitles += title + "\n" ;
+                    collection.getDocumentList().add(Book.fromJSON(volumes.getJSONObject(i).getJSONObject("volumeInfo")));
                 }
                 CollectionManager.getInstance().addCollection(keywords, collection);
-                showRequestResultDialog(debugtitles);
+                startCollectionActivity();
             } catch (JSONException e) {
                 showRequestResultDialog(result);
                 Log.w("DiLA", e.toString());

@@ -26,8 +26,14 @@
 
 package fr.univ_lyon1.dila.model;
 
-import android.app.Fragment;
 
+import android.support.v4.app.Fragment;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.univ_lyon1.dila.view.BookCard;
@@ -39,8 +45,8 @@ public class Book extends Document{
     protected List<String> authors ;
     protected int nbPages ;
 
-    public Book(String title, String date, String synopsis, List<String> authors, int nbPages) {
-        super(title, date, synopsis);
+    public Book(String title, String date, String synopsis, String thumbnail, List<String> authors, int nbPages) {
+        super(title, date, synopsis, thumbnail);
         this.authors = authors;
         this.nbPages = nbPages;
     }
@@ -55,6 +61,47 @@ public class Book extends Document{
 
     @Override
     public Fragment getCard() {
-        return new BookCard() ;
+
+        BookCard card = new BookCard() ;
+        card.setBook(this);
+        return card ;
+    }
+
+    public static Book fromJSON(JSONObject jsonObject) {
+
+        List<String> authors = new ArrayList<>();
+        String title = null;
+        String date = null;
+        String synopsis = null;
+        int nbPages = 0;
+        String thumbnail = null ;
+        try {
+            if (jsonObject.has("authors")) {
+                for (int j = 0; j < jsonObject.getJSONArray("authors").length(); j++) {
+                    authors.add(jsonObject.getJSONArray("authors").getString(j));
+                }
+            }
+            if (jsonObject.has("pageCount")) {
+                nbPages = jsonObject.getInt("pageCount");
+            }
+            if (jsonObject.has("title")) {
+                title = jsonObject.getString("title");
+            }
+            if (jsonObject.has("publishedDate")) {
+                date = jsonObject.getString("publishedDate");
+            }
+            if (jsonObject.has("description")) {
+                synopsis = jsonObject.getString("description");
+            }
+            if(jsonObject.has("imageLinks")) {
+                JSONObject imageLinks = jsonObject.getJSONObject("imageLinks");
+                if(imageLinks.has("thumbnail")) {
+                    thumbnail = imageLinks.getString("thumbnail");
+                }
+            }
+        } catch (JSONException e) {
+            Log.w("DiLA", e.toString());
+        }
+        return new Book(title, date, synopsis,thumbnail, authors, nbPages);
     }
 }

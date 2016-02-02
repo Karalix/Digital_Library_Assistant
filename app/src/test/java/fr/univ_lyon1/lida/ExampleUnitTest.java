@@ -1,4 +1,4 @@
-package fr.univ_lyon1.lida;
+package fr.univ_lyon1.dila;
 
 import org.junit.Test;
 

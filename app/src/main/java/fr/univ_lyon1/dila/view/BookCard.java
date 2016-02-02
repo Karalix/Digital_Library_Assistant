@@ -26,36 +26,53 @@
 
 package fr.univ_lyon1.dila.view;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import fr.univ_lyon1.dila.R;
+import fr.univ_lyon1.dila.model.Book;
+import fr.univ_lyon1.dila.network.DownloadImageTask;
 
 /**
  * Created by Alix Ducros on 29/01/16.
  */
 public class BookCard extends Fragment {
-    public static final String ARG_OBJECT = "object";
 
-    public void setInfos() {
+    private Book book ;
 
+    public void setBook(Book book) {
+        this.book = book ;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        String authors = "";
+        for (String author : book.getAuthor()) {
+            authors += author ;
+            authors += ", ";
+        }
+
+        String baseInfos = authors + book.getDate() + ", " + book.getNbPages() + " pages.";
         // The last two arguments ensure LayoutParams are inflated
         // properly.
         View rootView = inflater.inflate(
                 R.layout.book_card, container, false);
-        Bundle args = getArguments();
-        ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-                Integer.toString(args.getInt(ARG_OBJECT)));
+        ((TextView) rootView.findViewById(R.id.book_title)).setText(book.getTitle());
+        ((TextView) rootView.findViewById(R.id.base_infos)).setText(baseInfos);
+        ((TextView) rootView.findViewById(R.id.synopsis)).setText(book.getSynopsis());
+
+        //Download the thumbnail in async
+        new DownloadImageTask((ImageView) rootView.findViewById(R.id.thumbnail))
+                .execute(book.getThumbnail());
         return rootView;
     }
-
 }
