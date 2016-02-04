@@ -30,7 +30,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +49,6 @@ import com.m039.beacon.keeper.receiver.BeaconReceiver;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univ_lyon1.dila.model.Beacon;
 import fr.univ_lyon1.dila.network.DownloadWebpageTask;
 
 /**
@@ -68,8 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onFoundBeacon(Context ctx, BeaconEntity beaconEntity) {
             android.util.Log.d("MainActivity", "onFoundBeacon | " + beaconEntity.getIBeacon());
-            Beacon foundBeacon = new Beacon(beaconEntity.getUuid(), beaconEntity.getDistance(), "Toto") ;
-            BeaconManager.getInstance().updateBeacon(foundBeacon);
+            BeaconManager.getInstance().updateBeacon(beaconEntity.getUuid(), beaconEntity.getDistance());
         }
 
     };

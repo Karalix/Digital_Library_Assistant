@@ -27,6 +27,7 @@
 package fr.univ_lyon1.dila;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.m039.beacon.keeper.service.BeaconService;
 
@@ -35,10 +36,18 @@ import com.m039.beacon.keeper.service.BeaconService;
  */
 public class MainApplication extends Application {
 
-        @Override
-        public void onCreate () {
-            super.onCreate ();
 
-            BeaconService.onApplicationCreate(this);
-        }
+    private static Context context;
+
+    public static Context getAppContext() {
+        return MainApplication.context;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        BeaconService.onApplicationCreate(this);
+        MainApplication.context = getApplicationContext();
+    }
 }

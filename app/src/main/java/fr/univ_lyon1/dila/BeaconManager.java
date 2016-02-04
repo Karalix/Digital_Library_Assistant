@@ -26,29 +26,39 @@
 
 package fr.univ_lyon1.dila;
 
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import fr.univ_lyon1.dila.model.Beacon;
-import fr.univ_lyon1.dila.model.Collection;
 
 /**
  * Created by Alix Ducros on 03/02/16.
  */
 public class BeaconManager {
 
-    private List<Beacon> beacons ;
-
+    private static BeaconManager ourInstance = new BeaconManager();
+    private static ArrayAdapter<String> adapter;
     private final int interval = 10000; // 1 Second
+    private List<Beacon> beacons;
+    private Map<String, String> knownBeacons;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable(){
         public void run() {
@@ -56,18 +66,32 @@ public class BeaconManager {
         }
     };
 
-    private static BeaconManager ourInstance = new BeaconManager();
-    private static ArrayAdapter<String> adapter;
-
-    public static BeaconManager getInstance() {
-        return ourInstance;
-    }
-
     private BeaconManager() {
         beacons = new ArrayList<>();
+        knownBeacons = new HashMap<>();
+
+        InputStream is = MainApplication.getAppContext().getApplicationContext().getResources().openRawResource(R.raw.beacons);
+
+        try {
+            String jsonString = readIt(is);
+            JSONArray array = new JSONArray(jsonString);
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject pair = array.getJSONObject(i);
+                knownBeacons.put(pair.getString("uuid"), pair.getString("keyword"));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         //handler.postAtTime(runnable, System.currentTimeMillis()+interval);
         handler.postDelayed(runnable, interval);
+    }
+
+    public static BeaconManager getInstance() {
+        return ourInstance;
     }
 
     public static void setAdapter(ArrayAdapter<String> adapter) {
@@ -97,17 +121,19 @@ public class BeaconManager {
         adapter.notifyDataSetChanged();
     }
 
-    public void updateBeacon(Beacon beacon) {
+    public void updateBeacon(String uuid, int distance) {
         boolean alreadyExists = false ;
         for (Beacon b : beacons) {
-            if (b.getId().equals(beacon.getId())) {
+            if (b.getId().equals(uuid)) {
                 b.resetAge();
-                b.setDistance(beacon.getDistance());
+                b.setDistance(distance);
                 alreadyExists = true ;
             }
         }
         if (!alreadyExists) {
-            beacons.add(beacon);
+            if (knownBeacons.containsKey(uuid)) {
+                beacons.add(new Beacon(uuid, distance, knownBeacons.get(uuid)));
+            }
         }
         adapter.clear();
         adapter.addAll(getOrdonnatedNearestBeaconsKeywords());
@@ -131,11 +157,24 @@ public class BeaconManager {
         return results ;
     }
 
-    private class BeaconCleaner extends AsyncTask<Void, Void, Void> {
+    public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
 
-        @Override
-        protected Void doInBackground(Void... params) {
-            return null;
+        if (stream != null) {
+            Writer writer = new StringWriter();
+
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 1024);
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                stream.close();
+            }
+            return writer.toString();
+        } else {
+            return "";
         }
     }
 
