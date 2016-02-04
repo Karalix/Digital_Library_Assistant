@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LiDA.iml" filepath="$PROJECT_DIR$/LiDA.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beacon-keeper-library/beacon-keeper-library.iml" filepath="$PROJECT_DIR$/beacon-keeper-library/beacon-keeper-library.iml" />
     </modules>
   </component>
 </project>

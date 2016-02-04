@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="beacon_keeper__beacon_ttl_ms_default">30000</integer>
+    <integer name="beacon_keeper__idle_time_ms_default">6000</integer>
+    <integer name="beacon_keeper__scanning_time_ms_default">4000</integer>
+    <string name="beacon_entity__distance__far">far</string>
+    <string name="beacon_entity__distance__immediate">immediate</string>
+    <string name="beacon_entity__distance__near">near</string>
+    <string name="beacon_keeper__pref_key__beacon_ttl_ms">ibeacon_keeper__pref_key__beacon_ttl_ms</string>
+    <string name="beacon_keeper__pref_key__idle_time_ms">ibeacon_keeper__pref_key__idle_time_ms</string>
+    <string name="beacon_keeper__pref_key__scanning_time_ms">ibeacon_keeper__pref_key__scanning_time_ms</string>
+</resources>

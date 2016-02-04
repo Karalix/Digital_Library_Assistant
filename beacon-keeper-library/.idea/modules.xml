@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../beacon-keeper.iml" filepath="$PROJECT_DIR$/../beacon-keeper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../beacon-keeper-app/beacon-keeper-app.iml" filepath="$PROJECT_DIR$/../beacon-keeper-app/beacon-keeper-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-background-sample/beacon-keeper-background-sample.iml" filepath="$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-background-sample/beacon-keeper-background-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-foreground-sample/beacon-keeper-foreground-sample.iml" filepath="$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-foreground-sample/beacon-keeper-foreground-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beacon-keeper-library.iml" filepath="$PROJECT_DIR$/beacon-keeper-library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-samples.iml" filepath="$PROJECT_DIR$/../beacon-keeper-samples/beacon-keeper-samples.iml" />
+    </modules>
+  </component>
+</project>

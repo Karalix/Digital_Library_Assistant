@@ -34,7 +34,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -45,26 +44,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.m039.beacon.keeper.content.BeaconEntity;
+import com.m039.beacon.keeper.receiver.BeaconReceiver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univ_lyon1.dila.model.Book;
-import fr.univ_lyon1.dila.model.Collection;
-import fr.univ_lyon1.dila.model.CollectionManager;
+import fr.univ_lyon1.dila.model.Beacon;
+import fr.univ_lyon1.dila.network.DownloadWebpageTask;
 
 /**
  * Created by Alix Ducros on 24/01/16.
@@ -72,20 +59,35 @@ import fr.univ_lyon1.dila.model.CollectionManager;
 
 public class HomeActivity extends AppCompatActivity {
 
-    List<String> topics = new ArrayList<>();
+
+    protected ArrayAdapter<String> topicsAdapter ;
+
+
+    private BeaconReceiver mBeaconReceiver = new BeaconReceiver() {
+
+        @Override
+        protected void onFoundBeacon(Context ctx, BeaconEntity beaconEntity) {
+            android.util.Log.d("MainActivity", "onFoundBeacon | " + beaconEntity.getIBeacon());
+            Beacon foundBeacon = new Beacon(beaconEntity.getUuid(), beaconEntity.getDistance(), "Toto") ;
+            BeaconManager.getInstance().updateBeacon(foundBeacon);
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hom);
-        topics.add("Informatique");
-        topics.add("Mathématiques");
-        topics.add("Physique");
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, topics);
+        List<String> topics = new ArrayList<>();
+
+        topicsAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, BeaconManager.getInstance().getOrdonnatedNearestBeaconsKeywords());
+        BeaconManager.setAdapter(topicsAdapter);
+
+
         ListView listTopics = (ListView)findViewById(R.id.listTopics);
-        listTopics.setAdapter(adapter);
+        listTopics.setAdapter(topicsAdapter);
         listTopics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,7 +119,8 @@ public class HomeActivity extends AppCompatActivity {
             //new DownloadWebpageTask().execute("https://www.googleapis.com/books/v1/volumes?q=flowers&key=AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
             //new DownloadWebpageTask().execute("https://www.wikipedia.org/");
             String keywordsWithoutBlanks = keywords.trim().replace(' ', '+');
-            new DownloadWebpageTask().execute("https://www.googleapis.com/books/v1/volumes?q="+keywordsWithoutBlanks+"&maxResults=40", keywords);
+            DownloadWebpageTask dwt = new DownloadWebpageTask(this);
+            dwt.execute("https://www.googleapis.com/books/v1/volumes?q=" + keywordsWithoutBlanks + "&maxResults=40", keywords);
 
 
         } else {
@@ -126,7 +129,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    protected void showRequestResultDialog(String result) {
+    public void showRequestResultDialog(String result) {
 
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -140,98 +143,24 @@ public class HomeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    protected  void startCollectionActivity() {
+    public void startCollectionActivity() {
         Intent intent = new Intent(this, CollectionActivity.class);
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-    private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-        private String keywords ;
-        @Override
-        protected String doInBackground(String... urls) {
-            keywords = urls[1] ;
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                JSONObject objects = new JSONObject(result) ;
-                JSONArray volumes = (JSONArray)objects.get("items");
 
-                Collection collection = new Collection() ;
+        mBeaconReceiver.register(this);
+    }
 
-                for(int i = 0 ; i< volumes.length() ; i++) {
-                    collection.getDocumentList().add(Book.fromJSON(volumes.getJSONObject(i).getJSONObject("volumeInfo")));
-                }
-                CollectionManager.getInstance().addCollection(keywords, collection);
-                startCollectionActivity();
-            } catch (JSONException e) {
-                showRequestResultDialog(result);
-                Log.w("DiLA", e.toString());
-            }
-        }
+    @Override
+    protected void onStop() {
+        super.onStop();
 
-        private String downloadUrl(String myurl) throws IOException {
-            InputStream is = null;
-
-            try {
-                URL url = new URL(myurl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(150000 /* milliseconds */);
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("key", "AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
-                conn.setDoInput(true);
-                // Starts the query
-                conn.connect();
-                int response = conn.getResponseCode();
-                if(response > 400) {
-                    is = conn.getErrorStream() ;
-                }
-                 else {
-                    is = conn.getInputStream();
-                }
-
-                // Convert the InputStream into a string
-                String contentAsString = readIt(is);
-                return contentAsString;
-
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
-        }
-
-        public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
-
-                if (stream != null) {
-                    Writer writer = new StringWriter();
-
-                    char[] buffer = new char[1024];
-                    try {
-                        Reader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"),1024);
-                        int n;
-                        while ((n = reader.read(buffer)) != -1) {
-                            writer.write(buffer, 0, n);
-                        }
-                    } finally {
-                        stream.close();
-                    }
-                    return writer.toString();
-                } else {
-                    return "";
-                }
-        }
+        mBeaconReceiver.unregister(this);
     }
 
 }

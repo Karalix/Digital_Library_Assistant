@@ -1,0 +1,178 @@
+[
+    {
+        "outputFile": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/res/merged/androidTest/debug/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 72,
+                    "endOffset": 123
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 4,
+                        "startOffset": 55,
+                        "endColumn": 72,
+                        "endOffset": 123
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 128,
+                    "endColumn": 70,
+                    "endOffset": 194
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 128,
+                        "endColumn": 70,
+                        "endOffset": 194
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 199,
+                    "endColumn": 74,
+                    "endOffset": 269
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 199,
+                        "endColumn": 74,
+                        "endOffset": 269
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 274,
+                    "endColumn": 60,
+                    "endOffset": 330
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 274,
+                        "endColumn": 60,
+                        "endOffset": 330
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 335,
+                    "endColumn": 72,
+                    "endOffset": 403
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 335,
+                        "endColumn": 72,
+                        "endOffset": 403
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 408,
+                    "endColumn": 62,
+                    "endOffset": 466
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 408,
+                        "endColumn": 62,
+                        "endOffset": 466
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 471,
+                    "endColumn": 106,
+                    "endOffset": 573
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 471,
+                        "endColumn": 106,
+                        "endOffset": 573
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 578,
+                    "endColumn": 104,
+                    "endOffset": 678
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 578,
+                        "endColumn": 104,
+                        "endOffset": 678
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 683,
+                    "endColumn": 112,
+                    "endOffset": 791
+                },
+                "from": {
+                    "file": "/home/alix/AndroidStudioProjects/LiDA/beacon-keeper-library/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 4,
+                        "startOffset": 683,
+                        "endColumn": 112,
+                        "endOffset": 791
+                    }
+                }
+            }
+        ]
+    }
+]

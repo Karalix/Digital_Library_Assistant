@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.m039.beacon.keeper.library.test" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:functionalTest="false"
+        android:handleProfiling="false"
+        android:label="Tests for com.m039.beacon.keeper.library.test"
+        android:targetPackage="com.m039.beacon.keeper.library.test" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <application>
+        <uses-library android:name="android.test.runner" />
+
+        <service android:name="com.m039.beacon.keeper.service.BeaconService" >
+        </service>
+    </application>
+
+</manifest>
