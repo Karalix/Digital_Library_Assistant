@@ -6,3 +6,7 @@
 .DS_Store
 /build
 /captures
+
+/beacon-keeper-library/build
+/beacon-keeper-library/.idea/workspace.xml
+/beacon-keeper-library/.idea/libraries
