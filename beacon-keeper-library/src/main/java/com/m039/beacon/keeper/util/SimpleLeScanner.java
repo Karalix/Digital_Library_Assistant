@@ -21,9 +21,10 @@ package com.m039.beacon.keeper.util;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 
-import com.m039.beacon.keeper.U;
 import com.m039.beacon.keeper.L;
+import com.m039.beacon.keeper.U;
 import com.m039.beacon.keeper.content.BeaconEntity;
 import com.m039.beacon.keeper.content.BeaconFactory;
 
@@ -39,29 +40,20 @@ import com.m039.beacon.keeper.content.BeaconFactory;
 public class SimpleLeScanner {
 
     public static final String TAG = "m039-SimpleLeScanner";
-
-    public static abstract class LeScanCallback
-        implements BluetoothAdapter.LeScanCallback {
-        @Override
-        public void onLeScan (BluetoothDevice device, int rssi, byte[] scanRecord) {
-            BeaconEntity beaconEntity = BeaconFactory.decode(device, rssi, scanRecord);
-            if (beaconEntity != null) {
-                onLeScan(beaconEntity);
-            }
-        }
-
-        public abstract void onLeScan(BeaconEntity beaconEntity);
-    }
-
-    private boolean mIsScanning = false;
     final private Context mContext;
-
+    private boolean mIsScanning = false;
     public SimpleLeScanner(Context ctx) {
         mContext = ctx.getApplicationContext();
     }
 
     public boolean startScan(LeScanCallback callback) {
         BluetoothAdapter ba = U.getBluetoothAdapter(mContext);
+        if (ba != null && !ba.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            enableBtIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(enableBtIntent);
+
+        }
         if (ba != null && ba.isEnabled() && !mIsScanning && callback != null) {
             if (ba.startLeScan(callback)) {
                 mIsScanning = true;
@@ -90,6 +82,19 @@ public class SimpleLeScanner {
     }
 
     protected void onStopScan() {
+    }
+
+    public static abstract class LeScanCallback
+            implements BluetoothAdapter.LeScanCallback {
+        @Override
+        public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+            BeaconEntity beaconEntity = BeaconFactory.decode(device, rssi, scanRecord);
+            if (beaconEntity != null) {
+                onLeScan(beaconEntity);
+            }
+        }
+
+        public abstract void onLeScan(BeaconEntity beaconEntity);
     }
 
 } // SimpleLeScanner
