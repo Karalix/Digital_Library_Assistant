@@ -4,4 +4,5 @@
     <string name="search">Recherche personnalisée</string>
     <string name="network_error">Erreur Réseau</string>
     <string name="title_activity_collection">CollectionActivity</string>
+    <string name="watch_on_wikipedia">Voir sur Wikipedia</string>
 </resources>

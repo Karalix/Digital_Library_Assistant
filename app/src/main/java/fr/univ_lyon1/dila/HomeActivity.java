@@ -37,7 +37,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,7 +48,9 @@ import com.m039.beacon.keeper.receiver.BeaconReceiver;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univ_lyon1.dila.network.DownloadWebpageTask;
+import fr.univ_lyon1.dila.model.BeaconsAdapter;
+import fr.univ_lyon1.dila.model.CollectionManager;
+import fr.univ_lyon1.dila.network.DownloadBooksTask;
 
 /**
  * Created by Alix Ducros on 24/01/16.
@@ -58,7 +59,7 @@ import fr.univ_lyon1.dila.network.DownloadWebpageTask;
 public class HomeActivity extends AppCompatActivity {
 
 
-    protected ArrayAdapter<String> topicsAdapter ;
+    protected BeaconsAdapter topicsAdapter;
 
 
     private BeaconReceiver mBeaconReceiver = new BeaconReceiver() {
@@ -78,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
 
         List<String> topics = new ArrayList<>();
 
-        topicsAdapter = new ArrayAdapter<>(this,
+        topicsAdapter = new BeaconsAdapter(this,
                 android.R.layout.simple_list_item_1, BeaconManager.getInstance().getOrdonnatedNearestBeaconsKeywords());
         BeaconManager.setAdapter(topicsAdapter);
 
@@ -113,11 +114,15 @@ public class HomeActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            //new DownloadWebpageTask().execute("https://www.googleapis.com/books/v1/volumes?q=flowers&key=AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
-            //new DownloadWebpageTask().execute("https://www.wikipedia.org/");
+            //new DownloadBooksTask().execute("https://www.googleapis.com/books/v1/volumes?q=flowers&key=AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
+            //new DownloadBooksTask().execute("https://www.wikipedia.org/");
             String keywordsWithoutBlanks = keywords.trim().replace(' ', '+');
-            DownloadWebpageTask dwt = new DownloadWebpageTask(this);
-            dwt.execute("https://www.googleapis.com/books/v1/volumes?q=" + keywordsWithoutBlanks + "&maxResults=40", keywords);
+            if (!CollectionManager.getInstance().getCollectionList().containsKey(keywords)) {
+                DownloadBooksTask dwt = new DownloadBooksTask(this);
+                dwt.execute("https://www.googleapis.com/books/v1/volumes?q=" + keywordsWithoutBlanks + "&maxResults=40", keywords);
+            } else {
+                startCollectionActivity(keywords);
+            }
 
 
         } else {
@@ -140,8 +145,9 @@ public class HomeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void startCollectionActivity() {
+    public void startCollectionActivity(String keywords) {
         Intent intent = new Intent(this, CollectionActivity.class);
+        intent.putExtra("keywords", keywords);
         startActivity(intent);
     }
 

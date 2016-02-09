@@ -26,19 +26,25 @@
 
 package fr.univ_lyon1.dila.view;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
+import fr.univ_lyon1.dila.PersonActivity;
 import fr.univ_lyon1.dila.R;
 import fr.univ_lyon1.dila.model.Book;
+import fr.univ_lyon1.dila.model.Person;
 import fr.univ_lyon1.dila.network.DownloadImageTask;
+import fr.univ_lyon1.dila.network.DownloadPersonTask;
 
 /**
  * Created by Alix Ducros on 29/01/16.
@@ -55,13 +61,9 @@ public class BookCard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        String authors = "";
-        for (String author : book.getAuthor()) {
-            authors += author ;
-            authors += ", ";
-        }
 
-        String baseInfos = authors + book.getDate() + ", " + book.getNbPages() + " pages.";
+
+        String baseInfos = book.getDate() + ", " + book.getNbPages() + " pages.";
         // The last two arguments ensure LayoutParams are inflated
         // properly.
         View rootView = inflater.inflate(
@@ -70,9 +72,36 @@ public class BookCard extends Fragment {
         ((TextView) rootView.findViewById(R.id.base_infos)).setText(baseInfos);
         ((TextView) rootView.findViewById(R.id.synopsis)).setText(book.getSynopsis());
 
+        for (final String author : book.getAuthor()) {
+            TextView authorTextView = new TextView(getContext());
+            authorTextView.setText(author);
+            //Le nom des auteurs est mis en bleu souligné
+            //afin que l'utilisateur l'assimile à un lien hypetexte
+            //et comprenne qu'il peut cliquer dessus
+            authorTextView.setTextColor(Color.BLUE);
+            authorTextView.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
+            authorTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.w("Yo man !", author);
+                    DownloadPersonTask task = new DownloadPersonTask(BookCard.this);
+                    task.execute(author);
+
+                }
+            });
+            ((LinearLayout) rootView.findViewById(R.id.authors)).addView(authorTextView);
+        }
+
         //Download the thumbnail in async
         new DownloadImageTask((ImageView) rootView.findViewById(R.id.thumbnail))
                 .execute(book.getThumbnail());
         return rootView;
+    }
+
+    public void startPersonActivity(Person person) {
+        Intent intent = new Intent(this.getActivity(), PersonActivity.class);
+        intent.putExtra("person", person);
+        startActivity(intent);
     }
 }

@@ -26,22 +26,31 @@
 
 package fr.univ_lyon1.dila.model;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Alix Ducros on 03/02/16.
  */
 public class Beacon implements Comparable<Beacon>{
-    String id ;
-    int distance ;
-    int age ;
-    String keyword ;
+    private String id;
+    private int distance;
+    private int age;
+    private String keyword;
+    private List<String> subTopics;
 
-    public Beacon(String id, int distance, String keyword) {
+    public Beacon(String id, int distance, String keyword, List<String> subTopics) {
         this.id = id;
         this.distance = distance;
         this.keyword = keyword ;
         age = 0 ;
+        this.subTopics = subTopics;
+        //TODO
+        this.subTopics = new ArrayList<>();
+        this.subTopics.add("Coucou");
+        this.subTopics.add("Toto");
+        this.subTopics.add("Tata");
+        this.subTopics.add("Titi");
     }
 
     public void resetAge() {
@@ -52,13 +61,12 @@ public class Beacon implements Comparable<Beacon>{
         age ++ ;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-
     public int getDistance() {
         return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     public String getId() {
@@ -71,6 +79,18 @@ public class Beacon implements Comparable<Beacon>{
 
     public String getKeyword() {
         return keyword;
+    }
+
+    public List<String> getSubTopics() {
+        return subTopics;
+    }
+
+    public String getSubTopicsFormattedString() {
+        String ret = "";
+        for (String subTopic : subTopics) {
+            ret += "- " + subTopic + "\n";
+        }
+        return ret;
     }
 
     @Override

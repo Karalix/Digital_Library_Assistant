@@ -34,18 +34,23 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * Created by Alix Ducros on 01/02/16.
  */
 public class CollectionStatePagerAdapter extends FragmentStatePagerAdapter {
-    public CollectionStatePagerAdapter(FragmentManager fm) {
+
+    private String keywords;
+
+    public CollectionStatePagerAdapter(FragmentManager fm, String keywords) {
+
         super(fm);
+        this.keywords = keywords;
     }
 
     @Override
     public Fragment getItem(int position) {
-        Collection col = CollectionManager.getInstance().getCollectionList().get(CollectionManager.getInstance().getLastCollection()) ;
+        Collection col = CollectionManager.getInstance().getCollectionList().get(keywords);
         return col.getDocumentList().get(position).getCard();
     }
 
     @Override
     public int getCount() {
-        return CollectionManager.getInstance().getCollectionList().get(CollectionManager.getInstance().getLastCollection()).getDocumentList().size();
+        return CollectionManager.getInstance().getCollectionList().get(keywords).getDocumentList().size();
     }
 }

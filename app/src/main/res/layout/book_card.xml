@@ -26,8 +26,8 @@
   -->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -43,32 +43,41 @@
                 android:orientation="vertical"
                 android:padding="20dp">
                 <ImageView
+                    android:id="@+id/thumbnail"
                     android:layout_width="120dp"
                     android:layout_height="150dp"
-                    android:id="@+id/thumbnail"
                     android:contentDescription="Thumbnail"
                     android:scaleType="centerCrop" />
                 <TextView
+                    android:id="@+id/book_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:id="@+id/book_title"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/authors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                    <TextView
                         android:id="@+id/base_infos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
                 </LinearLayout>
                 <TextView
+                    android:id="@+id/synopsis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/synopsis"
                     />
             </LinearLayout>
 

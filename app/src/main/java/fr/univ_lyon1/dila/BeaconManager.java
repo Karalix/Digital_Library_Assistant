@@ -27,7 +27,6 @@
 package fr.univ_lyon1.dila;
 
 import android.os.Handler;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.univ_lyon1.dila.model.Beacon;
+import fr.univ_lyon1.dila.model.BeaconsAdapter;
 
 /**
  * Created by Alix Ducros on 03/02/16.
@@ -55,7 +55,7 @@ import fr.univ_lyon1.dila.model.Beacon;
 public class BeaconManager {
 
     private static BeaconManager ourInstance = new BeaconManager();
-    private static ArrayAdapter<String> adapter;
+    private static BeaconsAdapter adapter;
     private final int interval = 10000; // 1 Second
     private List<Beacon> beacons;
     private Map<String, String> knownBeacons;
@@ -94,7 +94,7 @@ public class BeaconManager {
         return ourInstance;
     }
 
-    public static void setAdapter(ArrayAdapter<String> adapter) {
+    public static void setAdapter(BeaconsAdapter adapter) {
         BeaconManager.adapter = adapter;
     }
 
@@ -132,7 +132,8 @@ public class BeaconManager {
         }
         if (!alreadyExists) {
             if (knownBeacons.containsKey(uuid)) {
-                beacons.add(new Beacon(uuid, distance, knownBeacons.get(uuid)));
+                //TODO
+                beacons.add(new Beacon(uuid, distance, knownBeacons.get(uuid), null));
             }
         }
         adapter.clear();
@@ -140,7 +141,7 @@ public class BeaconManager {
         adapter.notifyDataSetChanged();
     }
 
-    public List<String> getOrdonnatedNearestBeaconsKeywords() {
+    public List<Beacon> getOrdonnatedNearestBeaconsKeywords() {
         Collections.sort(beacons);
         List<Beacon> nearestBeacons ;
         if(beacons.size()>=3) {
@@ -150,11 +151,7 @@ public class BeaconManager {
         }else {
             nearestBeacons = beacons.subList(0, beacons.size());
         }
-        List<String> results = new ArrayList<>() ;
-        for(Beacon beacon : nearestBeacons) {
-            results.add(beacon.getKeyword());
-        }
-        return results ;
+        return nearestBeacons;
     }
 
     public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {

@@ -44,70 +44,74 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import fr.univ_lyon1.dila.HomeActivity;
-import fr.univ_lyon1.dila.model.Book;
-import fr.univ_lyon1.dila.model.Collection;
-import fr.univ_lyon1.dila.model.CollectionManager;
+import fr.univ_lyon1.dila.model.Person;
+import fr.univ_lyon1.dila.view.BookCard;
 
 /**
  * Created by Alix Ducros on 03/02/16.
  */
-public class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-    private final HomeActivity activity;
-    private String keywords ;
+public class DownloadPersonTask extends AsyncTask<String, Void, String> {
+    private final BookCard activity;
+    private String keywords;
 
-    public DownloadWebpageTask(HomeActivity homeActivity) {
-        this.activity = homeActivity ;
+    public DownloadPersonTask(BookCard ctx) {
+        this.activity = ctx;
     }
 
     @Override
-    protected String doInBackground(String... urls) {
-        keywords = urls[1] ;
+    protected String doInBackground(String... keywords) {
+        this.keywords = keywords[0];
         // params comes from the execute() call: params[0] is the url.
         try {
-            return downloadUrl(urls[0]);
+            return downloadUrl(keywords[0]);
         } catch (IOException e) {
             return "Unable to retrieve web page. URL may be invalid.";
         }
     }
+
     // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(String result) {
         try {
-            JSONObject objects = new JSONObject(result) ;
-            JSONArray volumes = (JSONArray)objects.get("items");
+            JSONObject objects = new JSONObject(result);
+            JSONArray personnes = (JSONArray) objects.get("itemListElement");
 
-            Collection collection = new Collection() ;
+            Person person = null;
 
-            for(int i = 0 ; i< volumes.length() ; i++) {
-                collection.getDocumentList().add(Book.fromJSON(volumes.getJSONObject(i).getJSONObject("volumeInfo")));
+            for (int i = 0; i < personnes.length(); i++) {
+                person = Person.fromJSON(personnes.getJSONObject(i));
             }
-            CollectionManager.getInstance().addCollection(keywords, collection);
-            activity.startCollectionActivity();
+
+            if (person == null) {
+                person = new Person(null, null, null, null);
+            }
+
+            activity.startPersonActivity(person);
         } catch (JSONException e) {
-            activity.showRequestResultDialog(result);
+            //activity.showRequestResultDialog(result);
             Log.w("DiLA", e.toString());
         }
     }
 
-    private String downloadUrl(String myurl) throws IOException {
+    private String downloadUrl(String keywords) throws IOException {
         InputStream is = null;
 
         try {
-            URL url = new URL(myurl);
+            String urlString = "https://kgsearch.googleapis.com/v1/entities:search?limit=1&query=";
+            String key = "AIzaSyDo4ocHmtSfsNrNvW0LOWrINbZpyJbzSVc";
+            String formattedKeywords = keywords.replace(" ", "+");
+            URL url = new URL(urlString + formattedKeywords + "&key=" + key);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(150000 /* milliseconds */);
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("key", "AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
             conn.setDoInput(true);
             // Starts the query
             conn.connect();
             int response = conn.getResponseCode();
-            if(response > 400) {
-                is = conn.getErrorStream() ;
-            }
-            else {
+            if (response > 400) {
+                is = conn.getErrorStream();
+            } else {
                 is = conn.getInputStream();
             }
 
@@ -131,7 +135,7 @@ public class DownloadWebpageTask extends AsyncTask<String, Void, String> {
 
             char[] buffer = new char[1024];
             try {
-                Reader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"),1024);
+                Reader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 1024);
                 int n;
                 while ((n = reader.read(buffer)) != -1) {
                     writer.write(buffer, 0, n);
