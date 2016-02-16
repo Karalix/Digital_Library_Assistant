@@ -58,7 +58,7 @@ public class BeaconManager {
     private static BeaconsAdapter adapter;
     private final int interval = 10000; // 1 Second
     private List<Beacon> beacons;
-    private Map<String, String> knownBeacons;
+    private Map<String, Beacon> knownBeacons;
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable(){
         public void run() {
@@ -78,7 +78,12 @@ public class BeaconManager {
 
             for (int i = 0; i < array.length(); i++) {
                 JSONObject pair = array.getJSONObject(i);
-                knownBeacons.put(pair.getString("uuid"), pair.getString("keyword"));
+                JSONArray subTopics = pair.getJSONArray("topics");
+                List<String> subTopicsStrings = new ArrayList<>();
+                for (int j = 0; j < subTopics.length(); j++) {
+                    subTopicsStrings.add(subTopics.getString(j));
+                }
+                knownBeacons.put(pair.getString("uuid"), new Beacon(pair.getString("uuid"), 0, pair.getString("keyword"), subTopicsStrings));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,22 +103,28 @@ public class BeaconManager {
         BeaconManager.adapter = adapter;
     }
 
-    public List<Beacon> getBeacons() {
+    public synchronized List<Beacon> getBeacons() {
         return beacons;
     }
 
-    protected void makeBeaconsGetOld(){
+    protected synchronized void makeBeaconsGetOld() {
+
+        //TODO DEBUG
+        updateBeacon("fa262fe9-2a96-41bd-8583-af062a1cd8b9", 1);
+        updateBeacon("2840e656-d048-4e43-bc1f-6957b8d19c3e", 1);
+        updateBeacon("8a682cc5-d702-492e-8c88-30df15a281e9", 1);
+
 
         handler.postDelayed(runnable, interval);
         List<Beacon> toDelete = new ArrayList<>();
-        for(Beacon entry : beacons) {
+        for (Beacon entry : this.getBeacons()) {
             entry.incAge();
             if(entry.getAge() > 2) {
                 toDelete.add(entry);
             }
         }
         for (Beacon target : toDelete) {
-            beacons.remove(target);
+            this.getBeacons().remove(target);
         }
 
         adapter.clear();
@@ -123,7 +134,7 @@ public class BeaconManager {
 
     public void updateBeacon(String uuid, int distance) {
         boolean alreadyExists = false ;
-        for (Beacon b : beacons) {
+        for (Beacon b : this.getBeacons()) {
             if (b.getId().equals(uuid)) {
                 b.resetAge();
                 b.setDistance(distance);
@@ -133,7 +144,7 @@ public class BeaconManager {
         if (!alreadyExists) {
             if (knownBeacons.containsKey(uuid)) {
                 //TODO
-                beacons.add(new Beacon(uuid, distance, knownBeacons.get(uuid), null));
+                this.getBeacons().add(new Beacon(uuid, distance, knownBeacons.get(uuid).getKeyword(), knownBeacons.get(uuid).getSubTopics()));
             }
         }
         adapter.clear();
@@ -142,14 +153,14 @@ public class BeaconManager {
     }
 
     public List<Beacon> getOrdonnatedNearestBeaconsKeywords() {
-        Collections.sort(beacons);
+        Collections.sort(this.getBeacons());
         List<Beacon> nearestBeacons ;
-        if(beacons.size()>=3) {
-            nearestBeacons =  beacons.subList(0,2);
-        } else if(beacons.size() == 0) {
+        if (this.getBeacons().size() >= 3) {
+            nearestBeacons = this.getBeacons().subList(0, 3);
+        } else if (this.getBeacons().size() == 0) {
             return new ArrayList<>();
         }else {
-            nearestBeacons = beacons.subList(0, beacons.size());
+            nearestBeacons = this.getBeacons().subList(0, this.getBeacons().size());
         }
         return nearestBeacons;
     }

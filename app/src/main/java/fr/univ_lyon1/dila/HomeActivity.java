@@ -27,6 +27,7 @@
 package fr.univ_lyon1.dila;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,6 +36,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -88,9 +90,31 @@ public class HomeActivity extends AppCompatActivity {
         listTopics.setAdapter(topicsAdapter);
         listTopics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(), ((TextView)view).getText(), Toast.LENGTH_SHORT).show();
-                requestAPI(((TextView)view).getText().toString());
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                // 1. Instantiate an AlertDialog.Builder with its constructor
+                final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                List<String> listTopics = BeaconManager.getInstance().getOrdonnatedNearestBeaconsKeywords().get(position).getSubTopics();
+
+                CharSequence[] arrayTopics = new CharSequence[listTopics.size()];
+                for (int i = 0; i < listTopics.size(); i++) {
+                    arrayTopics[i] = listTopics.get(i);
+                }
+                builder.setItems(arrayTopics, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // The 'which' argument contains the index position
+                                // of the selected item
+                                String subtopic = BeaconManager.getInstance().getOrdonnatedNearestBeaconsKeywords()
+                                        .get(position)
+                                        .getSubTopics()
+                                        .get(which);
+                                requestAPI(subtopic);
+                            }
+                        }
+                );
+
+                // 3. Get the AlertDialog from create()
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -106,6 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 

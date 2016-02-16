@@ -26,7 +26,6 @@
 
 package fr.univ_lyon1.dila.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,12 +44,6 @@ public class Beacon implements Comparable<Beacon>{
         this.keyword = keyword ;
         age = 0 ;
         this.subTopics = subTopics;
-        //TODO
-        this.subTopics = new ArrayList<>();
-        this.subTopics.add("Coucou");
-        this.subTopics.add("Toto");
-        this.subTopics.add("Tata");
-        this.subTopics.add("Titi");
     }
 
     public void resetAge() {
