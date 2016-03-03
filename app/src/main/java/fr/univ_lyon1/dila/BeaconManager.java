@@ -155,8 +155,8 @@ public class BeaconManager {
     public List<Beacon> getOrdonnatedNearestBeaconsKeywords() {
         Collections.sort(this.getBeacons());
         List<Beacon> nearestBeacons ;
-        if (this.getBeacons().size() >= 3) {
-            nearestBeacons = this.getBeacons().subList(0, 3);
+        if (this.getBeacons().size() >= 4) {
+            nearestBeacons = this.getBeacons().subList(0, 4);
         } else if (this.getBeacons().size() == 0) {
             return new ArrayList<>();
         }else {

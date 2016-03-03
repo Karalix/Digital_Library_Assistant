@@ -2,7 +2,7 @@
 <resources>
 
    <integer name="beacon_keeper__scanning_time_ms_default">4000</integer>
-   <integer name="beacon_keeper__idle_time_ms_default">6000</integer>
+   <integer name="beacon_keeper__idle_time_ms_default">2000</integer>
    <integer name="beacon_keeper__beacon_ttl_ms_default">30000</integer>
 
 </resources>

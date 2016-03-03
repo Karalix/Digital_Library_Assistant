@@ -30,6 +30,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.viewpagerindicator.CirclePageIndicator;
+
 import fr.univ_lyon1.dila.model.CollectionStatePagerAdapter;
 
 public class CollectionActivity extends AppCompatActivity {
@@ -45,9 +47,14 @@ public class CollectionActivity extends AppCompatActivity {
         String keywords = this.getIntent().getStringExtra("keywords");
         setTitle(keywords);
 
+        CirclePageIndicator indicator = (CirclePageIndicator)findViewById(R.id.indicator);
+
+        indicator.setStrokeColor(0xBB111111);
+
         adapter = new CollectionStatePagerAdapter(getSupportFragmentManager(), keywords);
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
+        indicator.setViewPager(pager);
     }
 
 }

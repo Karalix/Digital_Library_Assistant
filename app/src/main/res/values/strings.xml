@@ -5,4 +5,6 @@
     <string name="network_error">Erreur Réseau</string>
     <string name="title_activity_collection">CollectionActivity</string>
     <string name="watch_on_wikipedia">Voir sur Wikipedia</string>
+    <string name="searching">Recherche en cours</string>
+    <string name="searching_explained">Nous cherchons les documents en rapport avec le sujet que vous avez choisi.</string>
 </resources>

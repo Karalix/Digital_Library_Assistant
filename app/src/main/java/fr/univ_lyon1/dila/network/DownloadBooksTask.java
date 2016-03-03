@@ -56,6 +56,7 @@ public class DownloadBooksTask extends AsyncTask<String, Void, String> {
     private final HomeActivity activity;
     private String keywords ;
 
+
     public DownloadBooksTask(HomeActivity homeActivity) {
         this.activity = homeActivity ;
     }
@@ -74,6 +75,7 @@ public class DownloadBooksTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         try {
+            activity.getProgressDialog().dismiss();
             JSONObject objects = new JSONObject(result) ;
             JSONArray volumes = (JSONArray)objects.get("items");
 

@@ -26,6 +26,7 @@
 
 package fr.univ_lyon1.dila;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     protected BeaconsAdapter topicsAdapter;
+    ProgressDialog progressDialog ;
 
 
     private BeaconReceiver mBeaconReceiver = new BeaconReceiver() {
@@ -141,8 +143,11 @@ public class HomeActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             //new DownloadBooksTask().execute("https://www.googleapis.com/books/v1/volumes?q=flowers&key=AIzaSyBOfekFME3DXlS03_AsKNWR6xazgExX60Q");
             //new DownloadBooksTask().execute("https://www.wikipedia.org/");
+
             String keywordsWithoutBlanks = keywords.trim().replace(' ', '+');
             if (!CollectionManager.getInstance().getCollectionList().containsKey(keywords)) {
+                progressDialog = ProgressDialog.show(HomeActivity.this, getString(R.string.searching), getString(R.string.searching_explained), true);
+
                 DownloadBooksTask dwt = new DownloadBooksTask(this);
                 dwt.execute("https://www.googleapis.com/books/v1/volumes?q=" + keywordsWithoutBlanks + "&maxResults=40", keywords);
             } else {
@@ -191,4 +196,7 @@ public class HomeActivity extends AppCompatActivity {
         mBeaconReceiver.unregister(this);
     }
 
+    public ProgressDialog getProgressDialog() {
+        return progressDialog ;
+    }
 }
